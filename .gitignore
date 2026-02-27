@@ -1,0 +1,21 @@
+# Pastas e arquivos virtuais do Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Banco de dados SQLite (Não suba o histórico de testes para o GitHub)
+*.sqlite3
+*.db
+
+# Arquivos gerados pelo Arduino/ESP32
+build/
+*.bin
+*.elf
+*.hex
+
+# Arquivos de Sistema Operacional (caso você use o Zorin OS/Linux ou abra no Windows/Mac)
+.DS_Store
+Thumbs.db

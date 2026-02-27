@@ -48,50 +48,53 @@ iot-comparativo-http-mqtt/
 ├── README.md                  # Documentação do projeto
 ├── requirements.txt           # Dependências do Python
 └── .gitignore                 # Arquivos e pastas ignorados pelo Git
+```
 
-
-⚙️ Pré-requisitos
+## ⚙️ Pré-requisitos
+```text
 Para rodar este projeto localmente, você precisará de:
 Python 3.8+
 Um Broker MQTT local ou em nuvem (ex: Eclipse Mosquitto)
 IDE Arduino (para compilar e gravar o código no ESP32)
 Bibliotecas do ESP32 instaladas na IDE Arduino (PubSubClient, HTTPClient, WiFi)
+```
+
 🚀 Como Executar
+
 1. Clonando o Repositório
-
-Bash
-
-
+```text
 git clone [https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git](https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git)
 cd iot-comparativo-http-mqtt
-
+```
 
 2. Configurando o Servidor Python
 Recomenda-se o uso de um ambiente virtual (venv).
 
-Bash
-
-
 # Instale as dependências
+```text
 pip install -r requirements.txt
+```
 
 # Inicie a API Flask
+```text
 python server/app.py
-
+```
 
 3. Testando com o Simulador (Opcional)
 Caso não esteja com o ESP32 conectado, você pode gerar dados de teste:
 
-Bash
-
-
+```text
 python server/simulador.py
-
+```
 
 4. Acessando o Dashboard
 Abra o arquivo dashboard/index.html em seu navegador. Insira o IP do servidor (ou mantenha localhost) e clique em CONECTAR para visualizar o fluxo de dados.
-👩‍💻 Autora
+
+
+## 👩‍💻 Autora
+```text
 Milena
 Estudante de Engenharia da Computação
 Desenvolvedora principal do projeto de TCC.
+```
 

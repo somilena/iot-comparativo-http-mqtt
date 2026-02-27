@@ -4,7 +4,7 @@ Autora: Milena
 Ano: 2026
 Descrição: Servidor back-end e API REST para telemetria IoT.
 Este código é parte integrante de Trabalho de Conclusão de Curso (TCC).
-Proibida a reprodução sem a manutenção dos devidos créditos.
+Proibida a reprodução sem a manutenção dos devidos créditos
 """
 
 from flask import Flask, jsonify, request

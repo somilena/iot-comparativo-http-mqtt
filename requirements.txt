@@ -11,4 +11,4 @@ MarkupSafe==3.0.3
 paho-mqtt==2.1.0
 requests==2.32.5
 urllib3==2.6.3
-Werkzeug==3.1.
+Werkzeug==3.1.6

@@ -79,6 +79,7 @@ python3 -m venv venv
 ```
 
 De seguida, ative o ambiente virtual:
+
 🐧 Comando para Linux e macOS:
 ```text
 source venv/bin/activate

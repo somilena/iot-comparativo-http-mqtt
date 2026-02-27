@@ -7,11 +7,11 @@ Este repositório contém o código-fonte desenvolvido para o Trabalho de Conclu
 
 ## 📑 Índice
 - [Visão Geral](#-visão-geral)
-- [Arquitetura do Projeto](#-arquitetura-do-projeto)
+- [Arquitetura do Projeto](#%EF%B8%8F-arquitetura-do-projeto)
 - [Estrutura de Arquivos](#-estrutura-de-arquivos)
-- [Pré-requisitos](#-pré-requisitos)
+- [Pré-requisitos](#%EF%B8%8F-pré-requisitos)
 - [Como Executar](#-como-executar)
-- [Autora](#-autora)
+- [Autora](#%E2%80%8D-autora)
 
 ---
 

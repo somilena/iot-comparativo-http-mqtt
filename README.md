@@ -51,12 +51,12 @@ iot-comparativo-http-mqtt/
 ```
 
 ## ⚙️ Pré-requisitos
-```text
 Para rodar este projeto localmente, você precisará de:
-Python 3.8+
-Um Broker MQTT local ou em nuvem (ex: Eclipse Mosquitto)
-IDE Arduino (para compilar e gravar o código no ESP32)
-Bibliotecas do ESP32 instaladas na IDE Arduino (PubSubClient, HTTPClient, WiFi)
+```text
+- Python 3.8+
+- Um Broker MQTT local ou em nuvem (ex: Eclipse Mosquitto)
+- IDE Arduino (para compilar e gravar o código no ESP32)
+- Bibliotecas do ESP32 instaladas na IDE Arduino (PubSubClient, HTTPClient, WiFi)
 ```
 
 ## 🚀 Como Executar
@@ -64,6 +64,9 @@ Bibliotecas do ESP32 instaladas na IDE Arduino (PubSubClient, HTTPClient, WiFi)
 1. Clonando o Repositório
 ```text
 git clone [https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git](https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git)
+```
+
+```text
 cd iot-comparativo-http-mqtt
 ```
 

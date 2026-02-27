@@ -48,6 +48,9 @@ float latencia_mqtt_anterior = 0.0;
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("\n=========================================");
+  Serial.println("  FIRMWARE IoT - DESENVOLVIDO POR MILENA ");
+  Serial.println("=========================================\n");
   dht.begin();
 
   http_url = String("http://") + server_ip + ":5000/dados_http";

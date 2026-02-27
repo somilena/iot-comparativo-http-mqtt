@@ -61,7 +61,7 @@ Para rodar este projeto localmente, você precisará de:
 
 ## 🚀 Como Executar
 
-1. Clonando o Repositório
+# 1. Clonando o Repositório
 ```text
 git clone [https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git](https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git)
 ```
@@ -70,28 +70,27 @@ git clone [https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git](https:/
 cd iot-comparativo-http-mqtt
 ```
 
-🚀
-2. Configurando o Servidor Python
-Recomenda-se o uso de um ambiente virtual (venv). Instale as dependências:
+# 2. Configurando o Servidor Python
+Recomenda-se o uso de um ambiente virtual (venv).
 
-# Instale as dependências
+Instale as dependências
 ```text
 pip install -r requirements.txt
 ```
 
-# Inicie a API Flask
+Inicie a API Flask
 ```text
 python server/app.py
 ```
-🚀
-3. Testando com o Simulador (Opcional)
+
+# 3. Testando com o Simulador (Opcional)
 Caso não esteja com o ESP32 conectado, você pode gerar dados de teste:
 
 ```text
 python server/simulador.py
 ```
-🚀
-4. Acessando o Dashboard
+
+# 4. Acessando o Dashboard
 Abra o arquivo dashboard/index.html em seu navegador. Insira o IP do servidor (ou mantenha localhost) e clique em CONECTAR para visualizar o fluxo de dados.
 
 

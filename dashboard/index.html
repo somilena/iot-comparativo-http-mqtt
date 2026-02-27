@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitorização IoT - TCC Milena</title>
+    
+    <!-- Bibliotecas Externas -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- ESTILOS (CSS) INLINE PARA EVITAR BUG DE CARREGAMENTO -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #020617; 
+            color: #f8fafc; 
+        }
+        .glass-panel { 
+            background: rgba(15, 23, 42, 0.8); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 1.5rem; 
+        }
+        .chart-container { 
+            position: relative; 
+            height: 320px; 
+            width: 100%; 
+        }
+
+        /* Estilos do Pop-up (Modal) */
+        #modal-historico {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: relative;
+            margin: 2% auto;
+            width: 95%;
+            max-width: 1100px;
+            max-height: 90vh;
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Scrollbar customizada para a tabela */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="p-4 lg:p-10">
+    <div class="max-w-7xl mx-auto">
+        <!-- CABEÇALHO DA APLICAÇÃO -->
+        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-10 gap-6">
+            <div>
+                <h1 class="text-3xl font-bold text-blue-400">Análise IoT Residencial</h1>
+                <p class="text-slate-400">Comparativo de Performance: HTTP vs MQTT</p>
+            </div>
+            
+            <div class="flex items-center gap-3 bg-slate-900 p-2 rounded-2xl border border-slate-800 shadow-2xl">
+                <div class="flex items-center gap-2 px-3 border-r border-slate-700">
+                    <span id="led-status" class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+                    <span id="txt-status" class="text-[10px] font-bold uppercase text-slate-500">Desconectado</span>
+                </div>
+                <input id="server-ip" type="text" placeholder="IP do Servidor" 
+                    class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-white outline-none w-44 focus:ring-1 focus:ring-blue-500 transition-all">
+                <button onclick="fetchData()" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95">
+                    CONECTAR
+                </button>
+            </div>
+        </header>
+
+        <!-- INDICADORES PRINCIPAIS (KPIs) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="glass-panel p-6 shadow-xl border-t-2 border-orange-500/20">
+                <div class="flex justify-between items-start mb-4">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Temperatura</p>
+                    <i data-lucide="thermometer" class="text-orange-500 w-4 h-4"></i>
+                </div>
+                <div class="text-4xl font-bold"><span id="curr-temp">--</span><span class="text-slate-600 text-lg ml-1">°C</span></div>
+            </div>
+            
+            <div class="glass-panel p-6 shadow-xl border-t-2 border-blue-500/20">
+                <div class="flex justify-between items-start mb-4">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Umidade</p>
+                    <i data-lucide="droplets" class="text-blue-500 w-4 h-4"></i>
+                </div>
+                <div class="text-4xl font-bold"><span id="curr-umid">--</span><span class="text-slate-600 text-lg ml-1">%</span></div>
+            </div>
+            
+            <div class="glass-panel p-6 shadow-xl border-b-4 border-yellow-500">
+                <div class="flex justify-between items-start mb-4">
+                    <p class="text-yellow-500 text-[10px] font-bold uppercase tracking-widest italic">Latência HTTP</p>
+                    <i data-lucide="timer" class="text-yellow-500 w-4 h-4"></i>
+                </div>
+                <div class="text-4xl font-bold"><span id="lat-http">--</span><span class="text-slate-600 text-lg ml-1">ms</span></div>
+            </div>
+            
+            <div class="glass-panel p-6 shadow-xl border-b-4 border-emerald-500">
+                <div class="flex justify-between items-start mb-4">
+                    <p class="text-emerald-500 text-[10px] font-bold uppercase tracking-widest italic">Latência MQTT</p>
+                    <i data-lucide="zap" class="text-emerald-500 w-4 h-4"></i>
+                </div>
+                <div class="text-4xl font-bold"><span id="lat-mqtt">--</span><span class="text-slate-600 text-lg ml-1">ms</span></div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO DE ANÁLISE GRÁFICA -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="glass-panel p-8 shadow-2xl">
+                <h3 class="font-bold text-slate-300 mb-6 flex items-center gap-2">
+                    <i data-lucide="activity" class="w-5 h-5 text-blue-400"></i>
+                    Telemetria Ambiental em Tempo Real
+                </h3>
+                <div class="chart-container"><canvas id="chartTele"></canvas></div>
+            </div>
+            
+            <div class="glass-panel p-8 shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-slate-300 flex items-center gap-2">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-400"></i>
+                        Comparativo de Performance (ms)
+                    </h3>
+                    <button onclick="toggleModal(true)" class="group flex items-center gap-2 bg-slate-800 hover:bg-blue-600/20 px-4 py-2 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all">
+                        <i data-lucide="database" class="w-4 h-4 text-blue-400"></i>
+                        <span class="text-[10px] font-bold uppercase text-slate-300 group-hover:text-blue-400">Ver Histórico SQLite</span>
+                    </button>
+                </div>
+                <div class="chart-container"><canvas id="chartLat"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JANELA POP-UP (MODAL) DO HISTÓRICO -->
+    <div id="modal-historico" onclick="event.target.id === 'modal-historico' ? toggleModal(false) : null">
+        <div class="modal-content glass-panel shadow-2xl border-blue-500/30">
+            <div class="p-8 border-b border-slate-800 bg-slate-900/60 flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-2xl text-blue-400">Logs da Base de Dados</h3>
+                    <p class="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] mt-1">Registros de telemetria persistidos em SQLite3</p>
+                </div>
+                <button onclick="toggleModal(false)" class="p-3 hover:bg-red-500/10 hover:text-red-500 rounded-2xl transition-all text-slate-400 bg-slate-800/50">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto overflow-y-auto max-h-[65vh] custom-scroll">
+                <table class="w-full text-left text-sm border-separate border-spacing-0">
+                    <thead class="sticky top-0 z-10 bg-slate-900 shadow-md">
+                        <tr class="text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                            <th class="px-10 py-5">Horário da Leitura</th>
+                            <th class="px-10 py-5 text-center">Protocolo</th>
+                            <th class="px-10 py-5">Temperatura</th>
+                            <th class="px-10 py-5">Umidade</th>
+                            <th class="px-10 py-5 font-bold text-white">Latência Real</th>
+                            <th class="px-10 py-5 text-right italic">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table" class="divide-y divide-slate-800/50 bg-slate-950/20 text-slate-300">
+                        <tr>
+                            <td colspan="6" class="px-10 py-20 text-center">
+                                <div class="flex flex-col items-center gap-4 text-slate-600">
+                                    <i data-lucide="loader-2" class="w-10 h-10 animate-spin"></i>
+                                    <p class="italic font-medium">Aguardando fluxo de dados do servidor...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="p-5 bg-slate-900/80 border-t border-slate-800 flex justify-between items-center px-10">
+                <p class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">Experimento TCC Milena - 2026</p>
+                <p id="total-logs" class="text-[10px] text-blue-500/70 font-mono">Registros na memória: 0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA DO SISTEMA (JAVASCRIPT) -->
+    <script>
+        lucide.createIcons();
+        let chartTele, chartLat;
+
+        const ipInput = document.getElementById('server-ip');
+        ipInput.value = localStorage.getItem('tcc_last_ip') || 'localhost';
+
+        function toggleModal(show) {
+            const modal = document.getElementById('modal-historico');
+            modal.style.display = show ? 'block' : 'none';
+            if (show) lucide.createIcons(); // Recriar ícones dentro do modal
+        }
+
+        function setupCharts() {
+            // Configuração para o gráfico de linha (Telemetria)
+            const teleOptions = {
+                responsive: true, 
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                scales: { 
+                    y: { 
+                        grid: { color: 'rgba(255,255,255,0.03)' }, 
+                        ticks: { color: '#64748b', font: { size: 10, weight: '600' } } 
+                    },
+                    x: { 
+                        grid: { display: false }, 
+                        ticks: { color: '#64748b', font: { size: 10, weight: '600' } } 
+                    }
+                },
+                plugins: { 
+                    legend: { 
+                        position: 'top',
+                        align: 'end',
+                        labels: { color: '#94a3b8', boxWidth: 12, font: { size: 11, weight: '600' } } 
+                    } 
+                }
+            };
+
+            // Configuração para o gráfico de barras (Latência) com Empilhamento (Stacked)
+            const latOptions = {
+                responsive: true, 
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                scales: { 
+                    y: { 
+                        stacked: true, // Centraliza as barras verticalmente
+                        grid: { color: 'rgba(255,255,255,0.03)' }, 
+                        ticks: { color: '#64748b', font: { size: 10, weight: '600' } } 
+                    },
+                    x: { 
+                        stacked: true, // Centraliza as barras horizontalmente no relógio
+                        grid: { display: false }, 
+                        ticks: { color: '#64748b', font: { size: 10, weight: '600' } } 
+                    }
+                },
+                plugins: { 
+                    legend: { 
+                        position: 'top',
+                        align: 'end',
+                        labels: { color: '#94a3b8', boxWidth: 12, font: { size: 11, weight: '600' } } 
+                    } 
+                }
+            };
+
+            chartTele = new Chart(document.getElementById('chartTele'), {
+                type: 'line',
+                data: { labels: [], datasets: [
+                    { label: 'Temperatura (°C)', borderColor: '#f97316', data: [], tension: 0.4, borderWidth: 3, pointRadius: 0, fill: true, backgroundColor: 'rgba(249, 115, 22, 0.05)' },
+                    { label: 'Umidade (%)', borderColor: '#3b82f6', data: [], tension: 0.4, borderWidth: 3, pointRadius: 0, fill: true, backgroundColor: 'rgba(59, 130, 246, 0.05)' }
+                ]},
+                options: teleOptions
+            });
+
+            chartLat = new Chart(document.getElementById('chartLat'), {
+                type: 'bar',
+                data: { labels: [], datasets: [
+                    // Removido o minBarLength e aumentada a espessura para ficarem mais bonitas centradas
+                    { label: 'HTTP (ms)', backgroundColor: '#eab308', data: [], borderRadius: 4, barThickness: 16 },
+                    { label: 'MQTT (ms)', backgroundColor: '#10b981', data: [], borderRadius: 4, barThickness: 16 }
+                ]},
+                options: latOptions
+            });
+        }
+
+        async function fetchData() {
+            const ip = ipInput.value.trim();
+            localStorage.setItem('tcc_last_ip', ip);
+            
+            try {
+                const response = await fetch(`http://${ip}:5000/ultimos_dados`);
+                if (!response.ok) throw new Error('Falha no servidor');
+                const data = await response.json();
+
+                document.getElementById('led-status').className = "w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_#10b981]";
+                document.getElementById('txt-status').innerText = "Ligado";
+                document.getElementById('txt-status').className = "text-[10px] font-bold uppercase text-emerald-500 tracking-wider";
+
+                if (data.length > 0) {
+                    const last = data[data.length - 1];
+                    
+                    document.getElementById('curr-temp').innerText = last.temperatura.toFixed(1);
+                    document.getElementById('curr-umid').innerText = last.umidade.toFixed(1);
+                    document.getElementById('total-logs').innerText = `Registros na memória: ${data.length}`;
+                    
+                    if (last.protocolo === 'HTTP') document.getElementById('lat-http').innerText = last.latencia_ms;
+                    else document.getElementById('lat-mqtt').innerText = last.latencia_ms;
+
+                    const labels = data.map(d => d.timestamp.split(' ')[1]);
+                    
+                    // Atualizar Gráfico Telemetria
+                    chartTele.data.labels = labels;
+                    chartTele.data.datasets[0].data = data.map(d => d.temperatura);
+                    chartTele.data.datasets[1].data = data.map(d => d.umidade);
+                    chartTele.update('none');
+
+                    // Mapeamento correto com null para ignorar dados vazios do outro protocolo
+                    chartLat.data.labels = labels;
+                    chartLat.data.datasets[0].data = data.map(d => d.protocolo === 'HTTP' ? d.latencia_ms : null);
+                    chartLat.data.datasets[1].data = data.map(d => d.protocolo === 'MQTT' ? d.latencia_ms : null);
+                    chartLat.update('none');
+
+                    // Atualizar Tabela (dentro do Modal)
+                    const tbody = document.getElementById('data-table');
+                    tbody.innerHTML = '';
+                    [...data].reverse().forEach(row => {
+                        const isHTTP = row.protocolo === 'HTTP';
+                        tbody.innerHTML += `
+                            <tr class="hover:bg-blue-500/5 transition-colors group">
+                                <td class="px-10 py-4 font-mono text-xs text-slate-500 group-hover:text-slate-300">${row.timestamp}</td>
+                                <td class="px-10 py-4 text-center">
+                                    <span class="px-3 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase ${isHTTP ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'}">
+                                        ${row.protocolo}
+                                    </span>
+                                </td>
+                                <td class="px-10 py-4 font-bold text-slate-200">${row.temperatura.toFixed(1)}°C</td>
+                                <td class="px-10 py-4 font-bold text-slate-400">${row.umidade.toFixed(1)}%</td>
+                                <td class="px-10 py-4 font-black text-white text-base">${row.latencia_ms}<span class="text-[10px] text-slate-600 ml-1">ms</span></td>
+                                <td class="px-10 py-4 text-right text-[10px] font-bold text-emerald-500/40 uppercase italic">Verificado</td>
+                            </tr>
+                        `;
+                    });
+                }
+            } catch (err) {
+                document.getElementById('led-status').className = "w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_12px_#dc2626]";
+                document.getElementById('txt-status').innerText = "Erro de Link";
+                document.getElementById('txt-status').className = "text-[10px] font-bold uppercase text-red-600 tracking-wider";
+            }
+        }
+
+        // Inicialização
+        setupCharts();
+        setInterval(fetchData, 4000);
+    </script>
+</body>
+</html>

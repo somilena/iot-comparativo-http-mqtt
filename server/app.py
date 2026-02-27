@@ -121,9 +121,9 @@ mqtt_client = mqtt.Client()
 mqtt_client.on_message = on_message
 
 if __name__ == '__main__':
-print("="*50)
-print(" SISTEMA IoT - DESENVOLVIDO POR MILENA (TCC 2026) ")
-print("="*50)
+    print("="*50)
+    print(" SISTEMA IoT - DESENVOLVIDO POR MILENA (TCC 2026) ")
+    print("="*50)
     
     # 1. Prepara a base de dados
     init_db()

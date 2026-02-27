@@ -1,3 +1,12 @@
+"""
+Projeto: Monitorização IoT - Comparativo HTTP vs MQTT
+Autora: Milena
+Ano: 2026
+Descrição: Servidor back-end e API REST para telemetria IoT.
+Este código é parte integrante de Trabalho de Conclusão de Curso (TCC).
+Proibida a reprodução sem a manutenção dos devidos créditos.
+"""
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import sqlite3

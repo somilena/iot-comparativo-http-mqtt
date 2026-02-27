@@ -63,7 +63,7 @@ Para rodar este projeto localmente, você precisará de:
 
 # 1. Clonando o Repositório
 ```text
-git clone [https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git](https://github.com/SEU_USUARIO/iot-comparativo-http-mqtt.git)
+git clone https://github.com/somilena/iot-comparativo-http-mqtt.git
 ```
 
 ```text

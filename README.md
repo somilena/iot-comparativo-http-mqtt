@@ -64,16 +64,22 @@ Para rodar este projeto localmente, você precisará de:
 ## 🚀 Como Executar
 
 ### 1. Clonando o Repositório
-Abra o seu terminal e execute os comandos abaixo para baixar o código e entrar na pasta do projeto:
+Antes de iniciar, certifique-se de que possui o [Git](https://git-scm.com/downloads) instalado em sua máquina. 
+
+Abra o seu terminal e execute o comando abaixo para baixar o código:
 ```bash
-git clone [https://github.com/somilena/iot-comparativo-http-mqtt.git](https://github.com/somilena/iot-comparativo-http-mqtt.git)
+git clone https://github.com/somilena/iot-comparativo-http-mqtt.git
+```
+
+Após a conclusão do download, acesse a pasta recém-criada do projeto:
+```bash
 cd iot-comparativo-http-mqtt
 ```
 
 ### 2. Configurando o Servidor Python
 Para evitar conflitos com os pacotes do sistema operacional (evitando o erro de *externally-managed-environment*), é altamente recomendado o uso de um ambiente virtual isolado (`venv`).
 
-Abra o terminal na pasta raiz do projeto e crie o ambiente virtual:
+Crie o ambiente virtual:
 ```bash
 python3 -m venv venv
 ```

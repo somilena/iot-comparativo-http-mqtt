@@ -1,3 +1,11 @@
+/* =========================================================
+ * PROJETO: Monitorização IoT - Comparativo HTTP vs MQTT
+ * AUTORA: Milena
+ * ANO: 2026
+ * DESCRIÇÃO: Firmware de telemetria para ESP32.
+ * Todos os direitos reservados.
+ * ========================================================= */
+
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <PubSubClient.h>

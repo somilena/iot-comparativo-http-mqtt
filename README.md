@@ -1,17 +1,16 @@
-
 # 🏠 Monitorização IoT: Comparativo de Performance HTTP vs MQTT
 
-Este repositório contém o código-fonte desenvolvido para o Trabalho de Conclusão de Curso (TCC) em Engenharia da Computação. O projeto consiste em um sistema completo de telemetria IoT utilizando um **ESP32**, que coleta, armazena e exibe dados de temperatura e umidade. O objetivo principal é comparar a latência, a confiabilidade e a eficiência entre os protocolos **HTTP** e **MQTT**.
+Este repositório contém o código-fonte desenvolvido para o Trabalho de Conclusão de Curso (TCC) em Engenharia de Computação. O projeto consiste em um sistema completo de telemetria IoT utilizando um **ESP32**, que coleta, armazena e exibe dados de temperatura e umidade. O objetivo principal é comparar a latência, a confiabilidade e a eficiência entre os protocolos **HTTP** e **MQTT**.
 
 ---
 
 ## 📑 Índice
 - [Visão Geral](#-visão-geral)
-- [Arquitetura do Projeto](#%EF%B8%8F-arquitetura-do-projeto)
+- [Arquitetura do Projeto](#-arquitetura-do-projeto)
 - [Estrutura de Arquivos](#-estrutura-de-arquivos)
-- [Pré-requisitos](#%EF%B8%8F-pré-requisitos)
+- [Pré-requisitos](#-pré-requisitos)
 - [Como Executar](#-como-executar)
-- [Autora](#%E2%80%8D-autora)
+- [Autora](#-autora)
 
 ---
 
@@ -50,73 +49,118 @@ iot-comparativo-http-mqtt/
 └── .gitignore                 # Arquivos e pastas ignorados pelo Git
 ```
 
+---
+
 ## ⚙️ Pré-requisitos
 Para rodar este projeto localmente, você precisará de:
-```text
-- Python 3.8+
-- Um Broker MQTT local ou em nuvem (ex: Eclipse Mosquitto)
-- IDE Arduino (para compilar e gravar o código no ESP32)
-- Bibliotecas do ESP32 instaladas na IDE Arduino (PubSubClient, HTTPClient, WiFi)
-```
+
+* Python 3.8+
+* Um Broker MQTT local ou em nuvem (ex: Eclipse Mosquitto)
+* IDE Arduino (para compilar e gravar o código no ESP32)
+* Bibliotecas do ESP32 instaladas na IDE Arduino (`PubSubClient`, `HTTPClient`, `WiFi`)
+
+---
 
 ## 🚀 Como Executar
 
-# 1. Clonando o Repositório
-```text
-git clone https://github.com/somilena/iot-comparativo-http-mqtt.git
-```
-
-```text
+### 1. Clonando o Repositório
+Abra o seu terminal e execute os comandos abaixo para baixar o código e entrar na pasta do projeto:
+```bash
+git clone [https://github.com/somilena/iot-comparativo-http-mqtt.git](https://github.com/somilena/iot-comparativo-http-mqtt.git)
 cd iot-comparativo-http-mqtt
 ```
 
-# 2. Configurando o Servidor Python
-Para evitar conflitos com os pacotes do sistema operativo (evitando o erro de *externally-managed-environment*), é altamente recomendado o uso de um ambiente virtual isolado (`venv`).
+### 2. Configurando o Servidor Python
+Para evitar conflitos com os pacotes do sistema operacional (evitando o erro de *externally-managed-environment*), é altamente recomendado o uso de um ambiente virtual isolado (`venv`).
 
 Abra o terminal na pasta raiz do projeto e crie o ambiente virtual:
 ```bash
 python3 -m venv venv
 ```
 
-De seguida, ative o ambiente virtual:
+Em seguida, ative o ambiente virtual de acordo com o seu sistema operacional:
 
----->  🐧 Comando para Linux e macOS:
-```text
-source venv/bin/activate
-```
+* 🐧 **Linux e macOS:**
+  ```bash
+  source venv/bin/activate
+  ```
+* 🪟 **Windows (Prompt de Comando/PowerShell):**
+  ```bash
+  venv\Scripts\activate
+  ```
 
------> 🪟 Comando para Windows (Prompt de Comando/PowerShell):
-```text
-venv\Scripts\activate
-```
-
-Com o ambiente virtual ativado (verá a indicação (venv) no início da linha do terminal), instale as dependências do projeto:
-
-```text
+Com o ambiente virtual ativado (você verá a indicação `(venv)` no início da linha do terminal), instale as dependências do projeto:
+```bash
 pip install -r requirements.txt
 ```
 
 Por fim, inicie a API Flask e o cliente MQTT:
-```text
+```bash
 python server/app.py
 ```
 
-# 3. Testando com o Simulador (Opcional)
-Caso não esteja com o ESP32 conectado, você pode gerar dados de teste:
+### 3. Testando com o Simulador (Opcional)
+Caso não possua o hardware (ESP32) conectado no momento, você pode gerar dados de teste para visualizar o funcionamento do sistema. 
 
-```text
+Abra um **novo terminal** (deixe o servidor Flask rodando no anterior), acesse a pasta do projeto e ative o ambiente virtual:
+```bash
+cd iot-comparativo-http-mqtt
+```
+
+* 🐧 **Linux e macOS:**
+  ```bash
+  source venv/bin/activate
+  ```
+* 🪟 **Windows:**
+  ```bash
+  venv\Scripts\activate
+  ```
+
+Em seguida, execute o script do simulador:
+```bash
 python server/simulador.py
 ```
+> 💡 *O simulador começará a enviar pacotes fictícios alternando entre HTTP e MQTT. Deixe este terminal aberto executando em segundo plano.*
 
-# 4. Acessando o Dashboard
-Abra o arquivo dashboard/index.html em seu navegador. Insira o IP do servidor (ou mantenha localhost) e clique em CONECTAR para visualizar o fluxo de dados.
+### 4. Acessando o Dashboard
+Para garantir que os gráficos e bibliotecas externas carreguem corretamente sem bloqueios de segurança do navegador, iniciaremos um servidor local leve para o front-end.
 
-(Nota: Sempre que fechar o terminal e voltar a trabalhar no projeto, lembre-se de correr novamente o comando de ativação do ambiente virtual antes de iniciar o servidor).
-
-## 👩‍💻 Autora
-```text
-Milena
-Estudante de Engenharia da Computação
-Desenvolvedora principal do projeto de TCC.
+Abra um **terceiro terminal** e acesse diretamente a pasta do dashboard:
+```bash
+cd iot-comparativo-http-mqtt/dashboard
 ```
 
+Inicie o servidor web nativo do Python:
+
+* 🐧 **Linux e macOS:**
+  ```bash
+  python3 -m http.server 8000
+  ```
+* 🪟 **Windows:**
+  ```bash
+  python -m http.server 8000
+  ```
+
+Abra o seu navegador web e acesse o endereço: **`http://localhost:8000`**
+
+Quando a interface carregar, insira o IP do servidor back-end (ou mantenha `localhost`) no campo superior direito e clique em **CONECTAR** para visualizar o fluxo de dados em tempo real.
+
+### 5. Acessando a API Diretamente (Dados Brutos)
+Como a arquitetura foi desenvolvida no padrão REST, o servidor Flask atua de forma independente do dashboard. Para fins de análise e validação acadêmica, você pode acessar os endpoints da API diretamente pelo navegador e visualizar o formato JSON puro.
+
+**Acesso na própria máquina (Localhost):**
+* **Status do Servidor:** Acesse `http://localhost:5000/`
+* **Dados JSON (Telemetria):** Acesse `http://localhost:5000/ultimos_dados` para visualizar os últimos 30 registros persistidos no SQLite.
+
+**Acesso através de outros dispositivos (Mesma rede Wi-Fi):**
+Como a API está configurada para ouvir em `0.0.0.0`, você pode acessar os dados através de um celular ou outro computador conectado à mesma rede. Basta substituir `<SEU_IP>` pelo endereço IPv4 exibido no terminal quando o Flask é iniciado (ex: `192.168.1.15`):
+* **Status do Servidor:** Acesse `http://<SEU_IP>:5000/`
+* **Dados JSON (Telemetria):** Acesse `http://<SEU_IP>:5000/ultimos_dados`
+
+---
+
+## 👩‍💻 Autora
+
+**Milena**
+* Estudante de Engenharia de Computação
+* Desenvolvedora principal do projeto de TCC.

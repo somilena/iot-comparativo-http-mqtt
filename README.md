@@ -45,6 +45,7 @@ iot-comparativo-http-mqtt/
 ├── dashboard/
 │   └── index.html             # Interface Web de monitoramento
 ├── README.md                  # Documentação do projeto
+├── LICENSE                    # Licença MIT de uso e direitos autorais
 ├── requirements.txt           # Dependências do Python
 └── .gitignore                 # Arquivos e pastas ignorados pelo Git
 ```

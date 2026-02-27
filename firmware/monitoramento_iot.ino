@@ -33,8 +33,10 @@ String http_url;
 // Canal (Tópico) para o protocolo MQTT
 // Segue o padrão: área / projeto / dispositivo
 String mqtt_topic = "iot/monitoramento/sensor";
-
 bool usar_http = true; 
+
+float latencia_http_anterior = 0.0;
+float latencia_mqtt_anterior = 0.0;
 
 void setup() {
   Serial.begin(115200);

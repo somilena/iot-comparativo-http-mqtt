@@ -71,14 +71,31 @@ cd iot-comparativo-http-mqtt
 ```
 
 # 2. Configurando o Servidor Python
-Recomenda-se o uso de um ambiente virtual (venv).
+Para evitar conflitos com os pacotes do sistema operativo (evitando o erro de *externally-managed-environment*), é altamente recomendado o uso de um ambiente virtual isolado (`venv`).
 
-Instale as dependências
+Abra o terminal na pasta raiz do projeto e crie o ambiente virtual:
+```bash
+python3 -m venv venv
+```
+
+De seguida, ative o ambiente virtual:
+# Comando para Linux e macOS:
+```text
+source venv/bin/activate
+```
+
+# Comando para Windows (Prompt de Comando/PowerShell):
+```text
+venv\Scripts\activate
+```
+
+Com o ambiente virtual ativado (verá a indicação (venv) no início da linha do terminal), instale as dependências do projeto:
+
 ```text
 pip install -r requirements.txt
 ```
 
-Inicie a API Flask
+Por fim, inicie a API Flask e o cliente MQTT:
 ```text
 python server/app.py
 ```
@@ -93,6 +110,7 @@ python server/simulador.py
 # 4. Acessando o Dashboard
 Abra o arquivo dashboard/index.html em seu navegador. Insira o IP do servidor (ou mantenha localhost) e clique em CONECTAR para visualizar o fluxo de dados.
 
+(Nota: Sempre que fechar o terminal e voltar a trabalhar no projeto, lembre-se de correr novamente o comando de ativação do ambiente virtual antes de iniciar o servidor).
 
 ## 👩‍💻 Autora
 ```text
